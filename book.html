@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Book House — Dussehra 30% OFF</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{--brand:#6d28d9;--accent:#f59e0b}
+  *{scroll-behavior:smooth}
+  .fade{animation:fade .25s ease both}@keyframes fade{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .pop{transition:transform .12s ease} .pop:active{transform:scale(.98)}
+  .glass{background:rgba(255,255,255,.08);backdrop-filter:blur(8px)}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+<!-- ===================== LANDING (AUTH ONLY) ===================== -->
+<section id="landing" class="min-h-screen relative flex items-center justify-center">
+  <!-- author collage -->
+  <div aria-hidden class="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-[2px] opacity-25">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/d/d6/William_Shakespeare_1609.jpg" alt="">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Jane_Austen_coloured_version.jpg" alt="">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Charles_Dickens_circa_1860s.jpg" alt="">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Leo_Tolstoy%2C_portrait.jpg" alt="">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/5/55/Mark_Twain_by_AF_Bradley.jpg" alt="">
+    <img class="w-full h-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Rabindranath_Tagore_unknown_location.jpg" alt="">
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-slate-900/70 to-black/60"></div>
+
+  <!-- auth card -->
+  <div class="relative z-10 w-full max-w-lg mx-4 glass border border-white/10 rounded-3xl p-8 text-white shadow-xl fade">
+    <div class="flex items-center justify-center gap-3">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-2xl">📚</div>
+      <div>
+        <h1 class="text-4xl font-extrabold tracking-tight">Book House</h1>
+        <p class="text-sm text-slate-200">A digital store — search & buy by author, genre, or price</p>
+      </div>
+    </div>
+
+    <p class="mt-4 text-xs text-amber-300">🎉 Dussehra Sale: <b>30% OFF</b> auto-applied at checkout</p>
+
+    <div class="mt-6 flex gap-3">
+      <button class="flex-1 py-2 rounded-xl bg-amber-400 text-black font-semibold pop" onclick="showAuth('login')">Login</button>
+      <button class="flex-1 py-2 rounded-xl border border-white/20 pop" onclick="showAuth('register')">Register</button>
+    </div>
+
+    <!-- login -->
+    <form id="loginForm" class="hidden mt-5 space-y-2" onsubmit="doLogin(event)">
+      <h3 class="font-semibold">Login</h3>
+      <input id="loginEmail" type="email" required placeholder="Email" class="w-full px-3 py-2 rounded-xl bg-white/10 outline-none">
+      <input id="loginPass" type="password" required placeholder="Password" class="w-full px-3 py-2 rounded-xl bg-white/10 outline-none">
+      <button class="w-full py-2 rounded-xl bg-purple-600 font-semibold">Sign in</button>
+      <p id="authMsg" class="text-xs text-yellow-200"></p>
+    </form>
+
+    <!-- register -->
+    <form id="registerForm" class="hidden mt-5 space-y-2" onsubmit="doRegister(event)">
+      <h3 class="font-semibold">Create account</h3>
+      <input id="regName" required placeholder="Full name" class="w-full px-3 py-2 rounded-xl bg-white/10 outline-none">
+      <input id="regEmail" type="email" required placeholder="Email" class="w-full px-3 py-2 rounded-xl bg-white/10 outline-none">
+      <input id="regPass" type="password" required placeholder="Password" class="w-full px-3 py-2 rounded-xl bg-white/10 outline-none">
+      <button class="w-full py-2 rounded-xl bg-amber-400 text-black font-semibold">Create account</button>
+      <p id="regMsg" class="text-xs text-emerald-200"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== APP ===================== -->
+<section id="app" class="hidden min-h-screen flex flex-col">
+  <!-- header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-500 text-white flex items-center justify-center font-bold">BH</div>
+        <div>
+          <div class="font-extrabold leading-5">Book House</div>
+          <div class="text-xs text-slate-500">Dussehra: <b>30% OFF</b> (auto)</div>
+        </div>
+      </div>
+
+      <!-- search -->
+      <div class="flex-1 max-w-2xl relative">
+        <input id="q" class="w-full px-4 py-2 rounded-full border outline-none" placeholder="Search books by title, author or genre…">
+        <div id="suggest" class="hidden absolute left-0 right-0 top-11 bg-white border rounded-xl shadow-md p-2 text-sm"></div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnWish" class="px-3 py-1 rounded-lg border">💜 <span id="wishCount"></span></button>
+        <button id="btnCartPanel" class="px-3 py-1 rounded-lg border">🛒 <span id="cartCount"></span></button>
+        <button id="btnLogout" class="px-3 py-1 rounded-lg border">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- small hero (customer reading) -->
+  <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex items-center gap-5">
+      <img alt="Reading" class="w-24 h-24 object-contain" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=640&auto=format&fit=crop"/>
+      <div>
+        <h2 class="text-xl font-bold">Find your next favorite book</h2>
+        <p class="text-sm text-slate-600">Search & filter by author, genre, or price. Add to cart, wishlist, and review.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- content -->
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- filters + admin -->
+    <aside class="lg:col-span-3 space-y-4">
+      <div class="bg-white rounded-2xl p-4 border">
+        <h4 class="font-semibold">Filters</h4>
+        <label class="block text-xs mt-2">Genre</label>
+        <select id="fGenre" class="w-full mt-1 px-3 py-2 rounded-xl border"></select>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <input id="minP" type="number" placeholder="Min ₹" class="px-3 py-2 rounded-xl border">
+          <input id="maxP" type="number" placeholder="Max ₹" class="px-3 py-2 rounded-xl border">
+        </div>
+        <label class="block text-xs mt-3">Sort</label>
+        <select id="sort" class="w-full mt-1 px-3 py-2 rounded-xl border">
+          <option value="popular">Popular</option>
+          <option value="priceAsc">Price ↑</option>
+          <option value="priceDesc">Price ↓</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 border">
+        <h4 class="font-semibold">Admin (local demo)</h4>
+        <form id="adminForm" class="mt-2 space-y-2">
+          <input id="aTitle" placeholder="Title" required class="w-full px-3 py-2 rounded-xl border">
+          <input id="aAuthor" placeholder="Author" required class="w-full px-3 py-2 rounded-xl border">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="aPrice" type="number" placeholder="Price" required class="px-3 py-2 rounded-xl border">
+            <input id="aGenre" placeholder="Genre" required class="px-3 py-2 rounded-xl border">
+          </div>
+          <input id="aImage" type="file" accept="image/*" class="w-full text-sm">
+          <button class="w-full py-2 rounded-xl bg-[--brand] text-white pop">Add Book</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- books -->
+    <section class="lg:col-span-6">
+      <div id="grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- cart list (separate panel) -->
+    <aside class="lg:col-span-3">
+      <div class="bg-white rounded-2xl p-4 border">
+        <div class="flex items-center justify-between">
+          <h4 class="font-semibold">🛒 Cart</h4>
+          <button class="text-sm underline" onclick="clearCart()">Clear</button>
+        </div>
+        <div id="cartList" class="mt-3 space-y-3 max-h-[60vh] overflow-auto"></div>
+        <div class="mt-3 flex items-center justify-between">
+          <span>Total</span><b id="cartTotal">₹0</b>
+        </div>
+        <button class="mt-3 w-full py-2 rounded-xl bg-green-600 text-white pop" onclick="checkout()">Checkout</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="border-t text-center text-xs py-4 text-slate-500">© <span id="year"></span> Book House — Dussehra 30% OFF</footer>
+</section>
+
+<!-- ===================== PRODUCT MODAL ===================== -->
+<div id="productModal" class="fixed inset-0 hidden items-center justify-center z-50">
+  <div class="absolute inset-0 bg-black/40" onclick="closeModal()"></div>
+  <div class="relative z-10 bg-white rounded-2xl p-5 w-full max-w-4xl">
+    <button class="absolute top-3 right-3" onclick="closeModal()">✖</button>
+    <div id="productContent"></div>
+  </div>
+</div>
+
+<!-- ===================== WISHLIST MODAL ===================== -->
+<div id="wishModal" class="fixed inset-0 hidden items-center justify-center z-50">
+  <div class="absolute inset-0 bg-black/40" onclick="closeWish()"></div>
+  <div class="relative z-10 bg-white rounded-2xl p-5 w-full max-w-lg">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="font-semibold">💜 Wishlist</h3>
+      <button onclick="closeWish()">✖</button>
+    </div>
+    <div id="wishList" class="space-y-3 max-h-[60vh] overflow-auto"></div>
+  </div>
+</div>
+
+<!-- ===================== PAYMENT MODAL ===================== -->
+<div id="payModal" class="fixed inset-0 hidden items-center justify-center z-50">
+  <div class="absolute inset-0 bg-black/40" onclick="closePay()"></div>
+  <div class="relative z-10 bg-white rounded-2xl p-5 w-full max-w-md">
+    <div class="flex items-center justify-between">
+      <h3 class="font-semibold">Complete Purchase</h3>
+      <button onclick="closePay()">✖</button>
+    </div>
+    <form class="mt-3 space-y-2" onsubmit="placeOrder(event)">
+      <input id="addrName" required placeholder="Full name" class="w-full px-3 py-2 rounded-xl border">
+      <input id="addrLine" required placeholder="Address" class="w-full px-3 py-2 rounded-xl border">
+      <div class="grid grid-cols-2 gap-2">
+        <input id="addrCity" required placeholder="City" class="px-3 py-2 rounded-xl border">
+        <input id="addrPin" required placeholder="PIN code" class="px-3 py-2 rounded-xl border">
+      </div>
+      <label class="text-sm font-semibold">Payment method</label>
+      <select id="payMethod" class="w-full px-3 py-2 rounded-xl border">
+        <option>UPI</option>
+        <option>Credit/Debit Card</option>
+        <option>Gift Card</option>
+        <option>Cash on Delivery</option>
+      </select>
+      <button class="w-full py-2 rounded-xl bg-green-600 text-white pop">Place Order</button>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ========= Constants & Helpers ========= */
+const SALE = 0.30; // 30% off
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const inr = n => '₹' + n.toLocaleString('en-IN');
+const priceAfter = p => Math.round(p * (1 - SALE));
+const store = (k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const read  = (k,d)=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+
+/* ========= Auth (localStorage) ========= */
+function showAuth(what){
+  $('#loginForm').classList.toggle('hidden', what!=='login');
+  $('#registerForm').classList.toggle('hidden', what!=='register');
+}
+function doRegister(e){
+  e.preventDefault();
+  const user={name:$('#regName').value.trim(), email:$('#regEmail').value.trim().toLowerCase(), pass:$('#regPass').value};
+  if(!user.name||!user.email||!user.pass){ $('#regMsg').textContent='Fill all fields'; return; }
+  store('bh_user', user); $('#regMsg').textContent='Account created. Please login.'; showAuth('login');
+}
+function doLogin(e){
+  e.preventDefault();
+  const email=$('#loginEmail').value.trim().toLowerCase(), pass=$('#loginPass').value;
+  const u=read('bh_user',null);
+  if(u && u.email===email && u.pass===pass){ store('bh_logged',true); enterApp(); }
+  else $('#authMsg').textContent='Invalid credentials';
+}
+
+/* ========= Data ========= */
+let state={
+  user: read('bh_user',null),
+  cart: read('bh_cart',[]),
+  wish: read('bh_wish',[]),
+  reviews: read('bh_reviews',{}),
+  singleBuy: null // if Buy Now for one item
+};
+let idc=1;
+function mk(b){ b.id=idc++; b.cover=b.cover||`https://picsum.photos/seed/${b.title.replace(/\\s+/g,'')}${b.id}/600/800`; b.rating=(3+Math.random()*2).toFixed(1); b.pop=Math.random(); return b; }
+
+let books=[
+  mk({title:'Pride and Prejudice', author:'Jane Austen', genre:'Fiction', price:399, year:1813, cover:'https://covers.openlibrary.org/b/id/8091016-L.jpg'}),
+  mk({title:'Hamlet', author:'William Shakespeare', genre:'Drama', price:329, year:1603, cover:'https://covers.openlibrary.org/b/id/8231856-L.jpg'}),
+  mk({title:'War and Peace', author:'Leo Tolstoy', genre:'History', price:549, year:1869, cover:'https://covers.openlibrary.org/b/id/7222246-L.jpg'}),
+  mk({title:'Huckleberry Finn', author:'Mark Twain', genre:'Fiction', price:349, year:1884, cover:'https://covers.openlibrary.org/b/id/8235082-L.jpg'}),
+  mk({title:'Great Expectations', author:'Charles Dickens', genre:'Fiction', price:429, year:1861, cover:'https://covers.openlibrary.org/b/id/8226191-L.jpg'}),
+  mk({title:'Clean Code', author:'Robert C. Martin', genre:'Programming', price:899}),
+  mk({title:'The Pragmatic Programmer', author:'Andrew Hunt', genre:'Programming', price:999}),
+  mk({title:'The Martian', author:'Andy Weir', genre:'Sci-Fi', price:599}),
+  mk({title:'Sapiens', author:'Yuval Noah Harari', genre:'Non-Fiction', price:699}),
+  mk({title:'Norwegian Wood', author:'Haruki Murakami', genre:'Romance', price:499})
+];
+// add more synthetic
+const gA=['Fiction','Fantasy','Sci-Fi','Romance','Mystery','Non-Fiction','Business','Self-Help','Programming','History'];
+const aA=['A. Sharma','K. Rao','P. Banerjee','S. Gupta','R. Verma','Isaac Asimov','J. Mehta','Agatha Christie','J. Austen','JRR Tolkien'];
+for(let i=0;i<26;i++){ books.push(mk({title:`${gA[i%gA.length]} Tales ${i+1}`, author:aA[i%aA.length], genre:gA[i%gA.length], price:250+Math.floor(Math.random()*800)})); }
+// add admin-saved
+books = books.concat(read('bh_admin',[]));
+
+/* ========= App Boot ========= */
+function enterApp(){
+  $('#landing').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  $('#year').textContent=new Date().getFullYear();
+  $('#btnLogout').onclick=()=>{ localStorage.removeItem('bh_logged'); location.reload(); };
+  $('#btnCartPanel').onclick=()=>document.querySelector('#cartList').scrollIntoView({behavior:'smooth'});
+  $('#btnWish').onclick=openWish;
+  // search interactions
+  $('#q').addEventListener('input', handleSearch);
+  // filters
+  $('#fGenre').innerHTML=['All',...new Set(books.map(b=>b.genre))].map(x=>`<option value="${x==='All'?'':x}">${x}</option>`).join('');
+  ['fGenre','minP','maxP','sort'].forEach(id=>$('#'+id).addEventListener('input', renderGrid));
+  // admin
+  $('#adminForm').addEventListener('submit', addBookAdmin);
+  renderGrid(); renderCart(); renderWishCount();
+}
+if(read('bh_logged',false)) enterApp();
+
+/* ========= Search + Suggestions (related) ========= */
+function handleSearch(){
+  const q = $('#q').value.trim().toLowerCase();
+  const box = $('#suggest');
+  if(!q){ box.classList.add('hidden'); renderGrid(); return; }
+  // suggestions: by matching author/genre/title and showing related picks
+  const hits = books.filter(b => (b.title+' '+b.author+' '+b.genre).toLowerCase().includes(q));
+  const related = books.filter(b => hits.length && (b.genre===hits[0].genre || b.author===hits[0].author)).slice(0,4);
+  box.innerHTML = `
+    <div class="text-slate-500 mb-1">Results (${hits.length})</div>
+    <div class="flex flex-wrap gap-2 mb-2">
+      ${hits.slice(0,6).map(b=>`<button class="px-2 py-1 rounded-full border text-xs" onclick="selectHit(${b.id})">${b.title}</button>`).join('') || '<span class="text-xs">No direct matches</span>'}
+    </div>
+    <div class="text-slate-500 mb-1">Related</div>
+    <div class="flex flex-wrap gap-2">
+      ${related.map(b=>`<button class="px-2 py-1 rounded-full bg-slate-100 text-xs" onclick="selectHit(${b.id})">${b.title}</button>`).join('') || '<span class="text-xs">—</span>'}
+    </div>`;
+  box.classList.remove('hidden');
+  renderGrid(); // also filter grid live
+}
+function selectHit(id){ openProduct(id); $('#suggest').classList.add('hidden'); $('#q').value=''; }
+
+/* ========= Grid Rendering ========= */
+function applyFilter(list){
+  const q = $('#q').value.trim().toLowerCase();
+  const g = $('#fGenre').value;
+  const min = $('#minP').value ? Number($('#minP').value) : null;
+  const max = $('#maxP').value ? Number($('#maxP').value) : null;
+  const sort= $('#sort').value;
+  let L = list.filter(b=>{
+    const inQ = !q || (b.title+' '+b.author+' '+b.genre).toLowerCase().includes(q);
+    const inG = !g || b.genre===g;
+    const inP = (min==null||b.price>=min)&&(max==null||b.price<=max);
+    return inQ && inG && inP;
+  });
+  if(sort==='priceAsc') L.sort((a,b)=>a.price-b.price);
+  else if(sort==='priceDesc') L.sort((a,b)=>b.price-a.price);
+  else if(sort==='rating') L.sort((a,b)=>b.rating-a.rating);
+  else L.sort((a,b)=>b.pop-a.pop);
+  return L;
+}
+function card(b){
+  return `<div class="bg-white rounded-2xl border overflow-hidden pop">
+    <div class="relative">
+      <img src="${b.cover}" alt="${b.title}" class="w-full h-56 object-cover">
+      <span class="absolute top-3 left-3 bg-amber-400 text-xs px-2 py-0.5 rounded-full text-black">30% OFF</span>
+      <button class="absolute top-3 right-3 bg-white/90 rounded-lg px-2 py-1" onclick="toggleWish(${b.id})">${state.wish.includes(b.id)?'💜':'🤍'}</button>
+    </div>
+    <div class="p-3">
+      <h3 class="font-semibold leading-tight line-clamp-2">${b.title}</h3>
+      <p class="text-xs text-slate-500">by ${b.author} • ${b.genre}</p>
+      <div class="mt-2 flex items-center justify-between">
+        <div><b>${inr(priceAfter(b.price))}</b> <span class="text-xs line-through text-slate-400 ml-1">${inr(b.price)}</span></div>
+        <button class="text-[--brand] font-semibold" onclick="openProduct(${b.id})">View</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderGrid(){
+  $('#grid').innerHTML = applyFilter(books).map(card).join('');
+}
+
+/* ========= Product Detail ========= */
+function openProduct(id){
+  const b = books.find(x=>x.id===id); if(!b) return;
+  const rel = books.filter(x=>x.genre===b.genre && x.id!==b.id).slice(0,6);
+  const rev = (state.reviews[id]||[]).map(r=>`<div class="border rounded-xl p-2"><div class="text-sm font-semibold">${r.name} • ⭐${r.rating}</div><div class="text-xs text-slate-600">${r.text}</div></div>`).join('') || '<div class="text-sm text-slate-500">No reviews yet.</div>';
+  $('#productContent').innerHTML = `
+    <div class="grid md:grid-cols-2 gap-4">
+      <img src="${b.cover}" class="w-full h-80 object-cover rounded-xl">
+      <div>
+        <h2 class="text-2xl font-bold">${b.title}</h2>
+        <p class="text-sm text-slate-600">by ${b.author} • ${b.genre}</p>
+        <div class="mt-2"><b>${inr(priceAfter(b.price))}</b> <span class="text-xs line-through text-slate-400 ml-1">${inr(b.price)}</span></div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button class="px-4 py-2 rounded-xl bg-[--brand] text-white" onclick="addToCart(${b.id})">Add to Cart</button>
+          <button class="px-4 py-2 rounded-xl border" onclick="buyNow(${b.id})">Buy Now</button>
+          <button class="px-3 py-2 rounded-xl border" onclick="toggleWish(${b.id}); openProduct(${b.id})">${state.wish.includes(b.id)?'💜 In Wishlist':'♡ Wishlist'}</button>
+        </div>
+        <div class="mt-4">
+          <h4 class="font-semibold">Write a review</h4>
+          <form class="space-y-2 mt-1" onsubmit="return submitReview(${b.id}, this)">
+            <input name="name" required placeholder="Your name" class="w-full px-3 py-2 rounded-xl border">
+            <div class="flex gap-2">
+              <input name="rating" required type="number" min="1" max="5" step="0.5" placeholder="Rating" class="w-28 px-3 py-2 rounded-xl border">
+              <input name="text" required placeholder="Short review" class="flex-1 px-3 py-2 rounded-xl border">
+            </div>
+            <button class="px-4 py-2 rounded-xl bg-amber-400">Post</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h4 class="font-semibold">Related</h4>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
+        ${rel.map(card).join('')}
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h4 class="font-semibold">Reviews</h4>
+      <div class="mt-2 space-y-2">${rev}</div>
+    </div>
+  `;
+  $('#productModal').classList.remove('hidden'); $('#productModal').classList.add('flex');
+}
+function closeModal(){ $('#productModal').classList.add('hidden'); }
+
+/* ========= Reviews ========= */
+function submitReview(id, form){
+  const d=new FormData(form);
+  const r={name:d.get('name'), rating:Number(d.get('rating')), text:d.get('text'), t:Date.now()};
+  const all=read('bh_reviews',{}); all[id]=(all[id]||[]).concat(r); store('bh_reviews',all); state.reviews=all;
+  openProduct(id); // re-render
+  return false;
+}
+
+/* ========= Wishlist ========= */
+function toggleWish(id){
+  const i=state.wish.indexOf(id); if(i>-1) state.wish.splice(i,1); else state.wish.push(id);
+  store('bh_wish',state.wish); renderWishCount(); renderGrid();
+}
+function renderWishCount(){ $('#wishCount').textContent = state.wish.length?`(${state.wish.length})`:''; }
+function openWish(){
+  const items = state.wish.map(id=>books.find(b=>b.id===id)).filter(Boolean);
+  $('#wishList').innerHTML = items.length ? items.map(b=>`
+    <div class="flex gap-3 items-center">
+      <img src="${b.cover}" class="w-14 h-16 object-cover rounded">
+      <div class="flex-1">
+        <div class="text-sm font-semibold">${b.title}</div>
+        <div class="text-xs text-slate-500">${b.author}</div>
+        <div class="mt-1 flex gap-2">
+          <button class="px-3 py-1 rounded bg-[--brand] text-white text-xs" onclick="addToCart(${b.id}); openWish()">Add to Cart</button>
+          <button class="px-3 py-1 rounded border text-xs" onclick="toggleWish(${b.id}); openWish()">Remove</button>
+        </div>
+      </div>
+    </div>`).join('') : '<p class="text-sm text-slate-500">No items in wishlist.</p>';
+  $('#wishModal').classList.remove('hidden'); $('#wishModal').classList.add('flex');
+}
+function closeWish(){ $('#wishModal').classList.add('hidden'); }
+
+/* ========= Cart ========= */
+function addToCart(id){
+  const found = state.cart.find(x=>x.id===id);
+  if(found) found.qty++; else state.cart.push({id, qty:1});
+  store('bh_cart',state.cart); renderCart(); $('#cartCount').textContent='('+state.cart.reduce((s,i)=>s+i.qty,0)+')';
+}
+function changeQty(id,delta){
+  const it = state.cart.find(x=>x.id===id); if(!it) return;
+  it.qty += delta; if(it.qty<=0) state.cart = state.cart.filter(x=>x.id!==id);
+  store('bh_cart',state.cart); renderCart(); $('#cartCount').textContent=state.cart.length?'('+state.cart.reduce((s,i)=>s+i.qty,0)+')':'';
+}
+function clearCart(){ state.cart=[]; store('bh_cart',state.cart); renderCart(); $('#cartCount').textContent=''; }
+function renderCart(){
+  const L = state.cart.map(i=>({ ...i, book: books.find(b=>b.id===i.id)})).filter(x=>x.book);
+  $('#cartList').innerHTML = L.length ? L.map(x=>`
+    <div class="flex gap-3 items-center">
+      <img src="${x.book.cover}" class="w-14 h-16 object-cover rounded">
+      <div class="flex-1">
+        <div class="text-sm font-semibold">${x.book.title}</div>
+        <div class="text-xs text-slate-500">${x.book.author}</div>
+        <div class="mt-1 flex items-center gap-2">
+          <button class="px-2 py-1 border rounded" onclick="changeQty(${x.id},-1)">-</button>
+          <span>${x.qty}</span>
+          <button class="px-2 py-1 border rounded" onclick="changeQty(${x.id},1)">+</button>
+          <span class="ml-auto text-sm font-semibold">${inr(priceAfter(x.book.price)*x.qty)}</span>
+        </div>
+      </div>
+    </div>`).join('') : '<p class="text-sm text-slate-500">Your cart is empty.</p>';
+  const total = L.reduce((s,x)=>s + priceAfter(x.book.price)*x.qty, 0);
+  $('#cartTotal').textContent = inr(total);
+}
+function checkout(){ state.singleBuy=null; openPay(); }
+function buyNow(id){ state.singleBuy={id, qty:1}; openPay(); }
+function openPay(){ $('#payModal').classList.remove('hidden'); $('#payModal').classList.add('flex'); }
+function closePay(){ $('#payModal').classList.add('hidden'); }
+function placeOrder(e){
+  e.preventDefault();
+  // simple "success"
+  if(state.singleBuy==null) state.cart=[]; // clear cart for full checkout
+  store('bh_cart',state.cart); renderCart(); $('#cartCount').textContent='';
+  closePay(); closeModal();
+  alert('🎉 Order placed! Dussehra discount applied.');
+}
+
+/* ========= Admin (add book) ========= */
+async function addBookAdmin(e){
+  e.preventDefault();
+  const t=$('#aTitle').value.trim(), a=$('#aAuthor').value.trim(), p=Number($('#aPrice').value), g=$('#aGenre').value.trim();
+  if(!t||!a||!p||!g) return;
+  let cover=`https://picsum.photos/seed/admin${Date.now()}/600/800`;
+  const f=$('#aImage').files[0];
+  if(f){
+    cover = await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f); });
+  }
+  const nb = mk({title:t, author:a, price:p, genre:g, cover});
+  books.push(nb);
+  const saved = read('bh_admin',[]); saved.push(nb); store('bh_admin',saved);
+  e.target.reset(); renderGrid();
+}
+
+/* ========= Init ========= */
+document.addEventListener('click', e=>{ if(e.target.id==='productModal') closeModal(); });
+$('#year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
